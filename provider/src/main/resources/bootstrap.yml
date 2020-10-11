@@ -1,0 +1,31 @@
+server:
+  port: 8087
+nacos:
+  port: 8848
+  service-address: 127.0.0.1
+  namespace: cbd0b684-7649-43d9-9186-4655f8b6ea8b  # 命名空间ID 不是命名空间名称
+spring:
+  application:
+    name: provider-nacos
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${nacos.service-address}:${nacos.port} #nacos注册地址
+        namespace: ${nacos.namespace}
+      config:
+        server-addr: ${nacos.service-address}:${nacos.port} # 主配置服务器地址
+        group: DEV_GROUP #指定GroupId 默认可以不用填写
+        namespace: ${nacos.namespace} # 根据自己nacos server生成的命名空间ID进行修改
+        file-extension: yaml  # 主配置 配置文件类型
+        extension-configs:
+          - data-id: common-dubbo.yaml
+            group: COMMON_GROUP
+            refresh: true  # 是否动态刷新，默认为false
+  ###
+  #配置的优先级:
+  # Spring Cloud Alibaba Nacos Config 目前提供了三种配置能力从 Nacos 拉取相关的配置。
+  # A: 通过 spring.cloud.nacos.config.shared-configs[n].data-id 支持多个共享 Data Id 的配置
+  # B: 通过 spring.cloud.nacos.config.extension-configs[n].data-id 的方式支持多个扩展 Data Id 的配置
+  # C: 通过内部相关规则(应用名、应用名+ Profile )自动生成相关的 Data Id 配置
+  # 当三种方式共同使用时，他们的一个优先级关系是:A < B < C
+###
